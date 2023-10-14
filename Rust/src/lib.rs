@@ -5,8 +5,12 @@ struct Parrot<'a> {
     nailed: bool,
 }
 
-impl<'a> Parrot<'a> {
-    pub fn speed(&self) -> Result<f32, &'static str> {
+trait Flyer {
+    fn speed(&self) -> Result<f32, &'static str>;
+}
+
+impl<'a> Flyer for Parrot<'a> {
+    fn speed(&self) -> Result<f32, &'static str> {
         match self.parrot_type {
             "european_parrot" => Ok(base_speed()),
             "african_parrot" => {
