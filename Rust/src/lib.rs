@@ -1,12 +1,27 @@
+trait Flyer {
+    fn speed(&self) -> Result<f32, &'static str>;
+}
+
+struct NorwegianBlue {
+    voltage: f32,
+    nailed: bool,
+}
+
+impl Flyer for NorwegianBlue {
+    fn speed(&self) -> Result<f32, &'static str> {
+        if self.nailed {
+            Ok(0.0)
+        } else {
+            Ok(compute_base_speed_for_voltage(self.voltage))
+        }
+    }
+}
+
 struct Parrot<'a> {
     parrot_type: &'a str,
     number_of_coconuts: usize,
     voltage: f32,
     nailed: bool,
-}
-
-trait Flyer {
-    fn speed(&self) -> Result<f32, &'static str>;
 }
 
 impl<'a> Flyer for Parrot<'a> {
@@ -19,13 +34,6 @@ impl<'a> Flyer for Parrot<'a> {
                     Ok(african_speed)
                 } else {
                     Ok(0.0)
-                }
-            }
-            "norwegian_blue_parrot" => {
-                if self.nailed == true {
-                    Ok(0.0)
-                } else {
-                    Ok(compute_base_speed_for_voltage(self.voltage))
                 }
             }
             _ => Err("Should be unreachable!"),
@@ -100,9 +108,7 @@ mod tests {
     }
     #[test]
     fn nailed_norwegian_blue_parrot() {
-        let parrot = Parrot {
-            parrot_type: "norwegian_blue_parrot",
-            number_of_coconuts: 0,
+        let parrot = NorwegianBlue {
             voltage: 1.5,
             nailed: true,
         };
@@ -110,9 +116,7 @@ mod tests {
     }
     #[test]
     fn not_nailed_norwegian_blue_parrot() {
-        let parrot = Parrot {
-            parrot_type: "norwegian_blue_parrot",
-            number_of_coconuts: 0,
+        let parrot = NorwegianBlue {
             voltage: 1.5,
             nailed: false,
         };
@@ -120,9 +124,7 @@ mod tests {
     }
     #[test]
     fn not_nailed_norwegian_blue_parrot_with_high_voltage() {
-        let parrot = Parrot {
-            parrot_type: "norwegian_blue_parrot",
-            number_of_coconuts: 0,
+        let parrot = NorwegianBlue {
             voltage: 4.0,
             nailed: false,
         };
