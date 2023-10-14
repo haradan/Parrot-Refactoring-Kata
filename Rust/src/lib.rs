@@ -25,26 +25,16 @@ impl Flyer for EuropeanParrot {
     }
 }
 
-struct Parrot<'a> {
-    parrot_type: &'a str,
+struct AfricanParrot {
     number_of_coconuts: usize,
-    voltage: f32,
-    nailed: bool,
 }
 
-impl<'a> Flyer for Parrot<'a> {
+impl Flyer for AfricanParrot {
     fn speed(&self) -> Result<f32, &'static str> {
-        match self.parrot_type {
-            "african_parrot" => {
-                let african_speed = base_speed() - load_factor() * self.number_of_coconuts as f32;
-                if african_speed > 0.0 {
-                    Ok(african_speed)
-                } else {
-                    Ok(0.0)
-                }
-            }
-            _ => Err("Should be unreachable!"),
-        }
+        Ok(f32::max(
+            0.0,
+            base_speed() - load_factor() * self.number_of_coconuts as f32,
+        ))
     }
 }
 
@@ -78,33 +68,24 @@ mod tests {
 
     #[test]
     fn african_parrot_speed_with_one_coconut() {
-        let parrot = Parrot {
-            parrot_type: "african_parrot",
+        let parrot = AfricanParrot {
             number_of_coconuts: 1,
-            voltage: 0.0,
-            nailed: false,
         };
         assert_eq!(parrot.speed().unwrap(), 3.0);
     }
 
     #[test]
     fn african_parrot_speed_with_two_coconut() {
-        let parrot = Parrot {
-            parrot_type: "african_parrot",
+        let parrot = AfricanParrot {
             number_of_coconuts: 2,
-            voltage: 0.0,
-            nailed: false,
         };
         assert_eq!(parrot.speed().unwrap(), 0.0);
     }
 
     #[test]
     fn african_parrot_speed_with_no_coconut() {
-        let parrot = Parrot {
-            parrot_type: "african_parrot",
+        let parrot = AfricanParrot {
             number_of_coconuts: 0,
-            voltage: 0.0,
-            nailed: false,
         };
         assert_eq!(parrot.speed().unwrap(), 12.0);
     }
