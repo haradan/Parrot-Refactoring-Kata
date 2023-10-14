@@ -17,6 +17,14 @@ impl Flyer for NorwegianBlue {
     }
 }
 
+struct EuropeanParrot {}
+
+impl Flyer for EuropeanParrot {
+    fn speed(&self) -> Result<f32, &'static str> {
+        Ok(base_speed())
+    }
+}
+
 struct Parrot<'a> {
     parrot_type: &'a str,
     number_of_coconuts: usize,
@@ -27,7 +35,6 @@ struct Parrot<'a> {
 impl<'a> Flyer for Parrot<'a> {
     fn speed(&self) -> Result<f32, &'static str> {
         match self.parrot_type {
-            "european_parrot" => Ok(base_speed()),
             "african_parrot" => {
                 let african_speed = base_speed() - load_factor() * self.number_of_coconuts as f32;
                 if african_speed > 0.0 {
@@ -65,12 +72,7 @@ mod tests {
 
     #[test]
     fn european_parrot_speed() {
-        let parrot = Parrot {
-            parrot_type: "european_parrot",
-            number_of_coconuts: 0,
-            voltage: 0.0,
-            nailed: false,
-        };
+        let parrot = EuropeanParrot {};
         assert_eq!(parrot.speed().unwrap(), 12.0);
     }
 
