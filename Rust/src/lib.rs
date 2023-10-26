@@ -1,10 +1,10 @@
-trait Parrot {
+pub trait Parrot {
     fn speed(&self) -> Result<f32, &'static str>;
 }
 
-struct NorwegianBlue {
-    voltage: f32,
-    nailed: bool,
+pub struct NorwegianBlue {
+    pub voltage: f32,
+    pub nailed: bool,
 }
 
 impl Parrot for NorwegianBlue {
@@ -17,7 +17,7 @@ impl Parrot for NorwegianBlue {
     }
 }
 
-struct EuropeanParrot {}
+pub struct EuropeanParrot {}
 
 impl Parrot for EuropeanParrot {
     fn speed(&self) -> Result<f32, &'static str> {
@@ -25,8 +25,8 @@ impl Parrot for EuropeanParrot {
     }
 }
 
-struct AfricanParrot {
-    number_of_coconuts: usize,
+pub struct AfricanParrot {
+    pub number_of_coconuts: usize,
 }
 
 impl Parrot for AfricanParrot {
@@ -54,69 +54,4 @@ fn load_factor() -> f32 {
 
 fn base_speed() -> f32 {
     12.0
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use insta::assert_snapshot;
-    use itertools::Itertools;
-
-    #[test]
-    fn parrot_speeds() {
-        let parrots: &[(&str, Box<dyn Parrot>)] = &[
-            ("European parrot", Box::new(EuropeanParrot {})),
-            (
-                "Unladen african parrot",
-                Box::new(AfricanParrot {
-                    number_of_coconuts: 0,
-                }),
-            ),
-            (
-                "African parrot with 1 coconut",
-                Box::new(AfricanParrot {
-                    number_of_coconuts: 1,
-                }),
-            ),
-            (
-                "African parrot with 2 coconuts",
-                Box::new(AfricanParrot {
-                    number_of_coconuts: 2,
-                }),
-            ),
-            (
-                "Norwegian blue",
-                Box::new(NorwegianBlue {
-                    voltage: 0.0,
-                    nailed: false,
-                }),
-            ),
-            (
-                "1.5V Norwegian blue",
-                Box::new(NorwegianBlue {
-                    voltage: 1.5,
-                    nailed: false,
-                }),
-            ),
-            (
-                "4V Norwegian blue",
-                Box::new(NorwegianBlue {
-                    voltage: 4.0,
-                    nailed: false,
-                }),
-            ),
-            (
-                "4V nailed Norwegian blue",
-                Box::new(NorwegianBlue {
-                    voltage: 4.0,
-                    nailed: true,
-                }),
-            ),
-        ];
-        let printed: String = parrots
-            .iter()
-            .map(|tuple| format!("{:>31}: {:>2}", tuple.0, tuple.1.speed().unwrap()))
-            .join("\n");
-        assert_snapshot!(printed);
-    }
 }
