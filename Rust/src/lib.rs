@@ -2,9 +2,39 @@ pub trait Parrot {
     fn speed(&self) -> Result<f32, &'static str>;
 }
 
-pub struct NorwegianBlue {
-    pub voltage: f32,
-    pub nailed: bool,
+pub fn european_parrot() -> Box<dyn Parrot> {
+    Box::new(EuropeanParrot {})
+}
+
+pub fn unladen_african_parrot() -> Box<dyn Parrot> {
+    Box::new(AfricanParrot {
+        number_of_coconuts: 0,
+    })
+}
+
+pub fn african_parrot_with_coconuts(coconuts: usize) -> Box<dyn Parrot> {
+    Box::new(AfricanParrot {
+        number_of_coconuts: coconuts,
+    })
+}
+
+pub fn norwegian_blue_with_volts(voltage: f32) -> Box<dyn Parrot> {
+    Box::new(NorwegianBlue {
+        voltage,
+        nailed: false,
+    })
+}
+
+pub fn nailed_norwegian_blue_with_volts(voltage: f32) -> Box<dyn Parrot> {
+    Box::new(NorwegianBlue {
+        voltage,
+        nailed: true,
+    })
+}
+
+struct NorwegianBlue {
+    voltage: f32,
+    nailed: bool,
 }
 
 impl Parrot for NorwegianBlue {
@@ -17,7 +47,7 @@ impl Parrot for NorwegianBlue {
     }
 }
 
-pub struct EuropeanParrot {}
+struct EuropeanParrot {}
 
 impl Parrot for EuropeanParrot {
     fn speed(&self) -> Result<f32, &'static str> {
@@ -25,8 +55,8 @@ impl Parrot for EuropeanParrot {
     }
 }
 
-pub struct AfricanParrot {
-    pub number_of_coconuts: usize,
+struct AfricanParrot {
+    number_of_coconuts: usize,
 }
 
 impl Parrot for AfricanParrot {
