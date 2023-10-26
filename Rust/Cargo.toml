@@ -9,4 +9,5 @@ edition = "2018"
 [dependencies]
 
 [dev-dependencies]
-insta = { version = "1.34.0", features = ["ron"] }
+insta = { version = "1.34.0", features = [] }
+itertools = { version = "0.11.0", features = [] }

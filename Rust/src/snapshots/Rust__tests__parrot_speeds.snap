@@ -1,0 +1,12 @@
+---
+source: src/lib.rs
+expression: printed
+---
+                European parrot: 12
+         Unladen african parrot: 12
+  African parrot with 1 coconut:  3
+ African parrot with 2 coconuts:  0
+                 Norwegian blue:  0
+            1.5V Norwegian blue: 18
+              4V Norwegian blue: 24
+       4V nailed Norwegian blue:  0

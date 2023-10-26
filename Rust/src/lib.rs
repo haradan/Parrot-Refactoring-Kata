@@ -1,4 +1,4 @@
-trait Flyer {
+trait Parrot {
     fn speed(&self) -> Result<f32, &'static str>;
 }
 
@@ -7,7 +7,7 @@ struct NorwegianBlue {
     nailed: bool,
 }
 
-impl Flyer for NorwegianBlue {
+impl Parrot for NorwegianBlue {
     fn speed(&self) -> Result<f32, &'static str> {
         if self.nailed {
             Ok(0.0)
@@ -19,7 +19,7 @@ impl Flyer for NorwegianBlue {
 
 struct EuropeanParrot {}
 
-impl Flyer for EuropeanParrot {
+impl Parrot for EuropeanParrot {
     fn speed(&self) -> Result<f32, &'static str> {
         Ok(base_speed())
     }
@@ -29,7 +29,7 @@ struct AfricanParrot {
     number_of_coconuts: usize,
 }
 
-impl Flyer for AfricanParrot {
+impl Parrot for AfricanParrot {
     fn speed(&self) -> Result<f32, &'static str> {
         Ok(f32::max(
             0.0,
@@ -59,58 +59,64 @@ fn base_speed() -> f32 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use insta::assert_snapshot;
+    use itertools::Itertools;
 
     #[test]
-    fn european_parrot_speed() {
-        let parrot = EuropeanParrot {};
-        assert_eq!(parrot.speed().unwrap(), 12.0);
-    }
-
-    #[test]
-    fn african_parrot_speed_with_one_coconut() {
-        let parrot = AfricanParrot {
-            number_of_coconuts: 1,
-        };
-        assert_eq!(parrot.speed().unwrap(), 3.0);
-    }
-
-    #[test]
-    fn african_parrot_speed_with_two_coconut() {
-        let parrot = AfricanParrot {
-            number_of_coconuts: 2,
-        };
-        assert_eq!(parrot.speed().unwrap(), 0.0);
-    }
-
-    #[test]
-    fn african_parrot_speed_with_no_coconut() {
-        let parrot = AfricanParrot {
-            number_of_coconuts: 0,
-        };
-        assert_eq!(parrot.speed().unwrap(), 12.0);
-    }
-    #[test]
-    fn nailed_norwegian_blue_parrot() {
-        let parrot = NorwegianBlue {
-            voltage: 1.5,
-            nailed: true,
-        };
-        assert_eq!(parrot.speed().unwrap(), 0.0);
-    }
-    #[test]
-    fn not_nailed_norwegian_blue_parrot() {
-        let parrot = NorwegianBlue {
-            voltage: 1.5,
-            nailed: false,
-        };
-        assert_eq!(parrot.speed().unwrap(), 18.0);
-    }
-    #[test]
-    fn not_nailed_norwegian_blue_parrot_with_high_voltage() {
-        let parrot = NorwegianBlue {
-            voltage: 4.0,
-            nailed: false,
-        };
-        assert_eq!(parrot.speed().unwrap(), 24.0);
+    fn parrot_speeds() {
+        let parrots: &[(&str, Box<dyn Parrot>)] = &[
+            ("European parrot", Box::new(EuropeanParrot {})),
+            (
+                "Unladen african parrot",
+                Box::new(AfricanParrot {
+                    number_of_coconuts: 0,
+                }),
+            ),
+            (
+                "African parrot with 1 coconut",
+                Box::new(AfricanParrot {
+                    number_of_coconuts: 1,
+                }),
+            ),
+            (
+                "African parrot with 2 coconuts",
+                Box::new(AfricanParrot {
+                    number_of_coconuts: 2,
+                }),
+            ),
+            (
+                "Norwegian blue",
+                Box::new(NorwegianBlue {
+                    voltage: 0.0,
+                    nailed: false,
+                }),
+            ),
+            (
+                "1.5V Norwegian blue",
+                Box::new(NorwegianBlue {
+                    voltage: 1.5,
+                    nailed: false,
+                }),
+            ),
+            (
+                "4V Norwegian blue",
+                Box::new(NorwegianBlue {
+                    voltage: 4.0,
+                    nailed: false,
+                }),
+            ),
+            (
+                "4V nailed Norwegian blue",
+                Box::new(NorwegianBlue {
+                    voltage: 4.0,
+                    nailed: true,
+                }),
+            ),
+        ];
+        let printed: String = parrots
+            .iter()
+            .map(|tuple| format!("{:>31}: {:>2}", tuple.0, tuple.1.speed().unwrap()))
+            .join("\n");
+        assert_snapshot!(printed);
     }
 }
